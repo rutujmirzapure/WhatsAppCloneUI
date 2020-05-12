@@ -12,16 +12,24 @@ class WhatsAppHome extends StatefulWidget {
 class _WhatsAppHomeState extends State<WhatsAppHome>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  bool showFab = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = new TabController(
       length: 4,
       vsync: this,
       initialIndex: 1,
     );
+    _tabController.addListener(() {
+      if (_tabController.index == 1) {
+        showFab = true;
+      } else {
+        showFab = false;
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -34,12 +42,15 @@ class _WhatsAppHomeState extends State<WhatsAppHome>
           controller: _tabController,
           indicatorColor: Colors.white,
           tabs: <Widget>[
-            new Tab(icon: new Icon(Icons.camera)),
+            Padding(
+              padding: const EdgeInsets.only(right: 40.0),
+              child: new Tab(icon: new Icon(Icons.camera_alt)),
+            ),
             new Tab(
-              text: ("CALLS"),
+              text: ("CHATS"),
             ),
             new Tab(text: "STATUS"),
-            new Tab(text: "CHATS"),
+            new Tab(text: "CALL"),
           ],
         ),
         actions: <Widget>[
@@ -59,14 +70,16 @@ class _WhatsAppHomeState extends State<WhatsAppHome>
           new CallScreen(),
         ],
       ),
-      floatingActionButton: new FloatingActionButton(
-        backgroundColor: Colors.green,
-        child: new Icon(
-          Icons.message,
-          color: Colors.white,
-        ),
-        onPressed: () => print('open chats'),
-      ),
+      floatingActionButton: showFab
+          ? FloatingActionButton(
+              backgroundColor: Colors.green,
+              child: new Icon(
+                Icons.message,
+                color: Colors.white,
+              ),
+              onPressed: () => print('open chats'),
+            )
+          : null,
     );
   }
 }
